@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gleici Oliveira · Painel Financeiro</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090f;--s1:#0d1119;--s2:#121a24;--s3:#18212e;
+  --bd:rgba(255,255,255,0.06);--bd2:rgba(255,255,255,0.11);--bd3:rgba(255,255,255,0.18);
+  --tx:#c8d4e0;--t2:#6e8099;--t3:#384455;
+  --gd:#d49830;--gd2:#f0b84a;--gdbg:rgba(212,152,48,0.10);--gdbr:rgba(212,152,48,0.22);
+  --gn:#16c26e;--gnbg:rgba(22,194,110,0.09);--gnbr:rgba(22,194,110,0.2);
+  --rd:#e04040;--rdbg:rgba(224,64,64,0.09);--rdbr:rgba(224,64,64,0.2);
+  --bl:#3d8ef0;--blbg:rgba(61,142,240,0.09);--blbr:rgba(61,142,240,0.2);
+  --pu:#9a5be0;--pubg:rgba(154,91,224,0.09);
+}
+body{background:var(--bg);color:var(--tx);font-family:'Syne',sans-serif;font-size:14px;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(rgba(255,255,255,0.016) 1px,transparent 1px);background-size:30px 30px;pointer-events:none;z-index:0}
+.page{max-width:980px;margin:0 auto;padding:0 24px 100px;position:relative;z-index:1}
+
+.eyebrow{font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gd);display:flex;align-items:center;gap:8px}
+.eyebrow::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.sh{font-size:9px;font-weight:700;letter-spacing:.20em;text-transform:uppercase;color:var(--gd);display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.sh::after{content:'';flex:1;height:1px;background:var(--bd2)}
+h2{font-size:clamp(16px,2vw,20px);font-weight:700;letter-spacing:-.02em;margin-bottom:18px;line-height:1.2;color:#dde6f0}
+
+/* Header */
+header{padding:52px 0 38px;border-bottom:1px solid var(--bd2);margin-bottom:50px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px}
+h1{font-size:clamp(26px,4.5vw,44px);font-weight:800;letter-spacing:-.04em;line-height:1.02;color:#e8f0fa}
+h1 span{color:var(--gd)}
+.hmeta p{font-family:'Space Mono',monospace;font-size:11px;color:var(--t2);line-height:2.1;text-align:right}
+section{margin-bottom:54px}
+
+/* Cards */
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.g4,.g3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:420px){.g2{grid-template-columns:1fr}}
+
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:18px 16px;position:relative;overflow:hidden;transition:border-color .2s}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.card.cg::before{background:var(--gn)}.card.co::before{background:var(--gd)}.card.cb::before{background:var(--bl)}.card.cp::before{background:var(--pu)}
+.card:hover{border-color:var(--bd2)}
+.cv{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;line-height:1;margin-bottom:7px}
+.cv.g{color:var(--gn)}.cv.o{color:var(--gd)}.cv.b{color:var(--bl)}.cv.p{color:var(--pu)}
+.cl{font-size:12px;font-weight:600;color:var(--tx)}.cs{font-size:10px;color:var(--t3);margin-top:4px}
+
+/* Plano Daycoval */
+.plan-box{background:var(--s1);border:1px solid var(--gdbr);border-radius:14px;overflow:hidden}
+.plan-top{background:var(--gdbg);padding:16px 20px;border-bottom:1px solid var(--gdbr);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.plan-title{font-size:14px;font-weight:700;color:#e8f0fa}
+.plan-sub{font-size:11px;color:var(--t2);margin-top:3px}
+.pill{display:inline-block;font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:4px}
+.pill-gd{background:var(--gdbg);color:var(--gd);border:1px solid var(--gdbr)}
+.pill-gn{background:var(--gnbg);color:var(--gn);border:1px solid var(--gnbr)}
+.pill-bl{background:var(--blbg);color:var(--bl);border:1px solid var(--blbr)}
+.pill-rd{background:var(--rdbg);color:var(--rd);border:1px solid var(--rdbr)}
+.pill-pu{background:var(--pubg);color:var(--pu)}
+
+.plan-steps{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--bd)}
+@media(max-width:600px){.plan-steps{grid-template-columns:repeat(3,1fr)}}
+.pstep{padding:14px 12px;border-right:1px solid var(--bd)}
+.pstep:last-child{border-right:none}
+.pstep.done{background:rgba(22,194,110,0.06)}.pstep.active{background:rgba(212,152,48,0.07)}.pstep.pending{opacity:.55}
+.ps-m{font-size:9px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;margin-bottom:5px;color:var(--t2)}
+.pstep.done .ps-m{color:var(--gn)}.pstep.active .ps-m{color:var(--gd)}
+.ps-v{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;margin-bottom:4px;line-height:1}
+.ps-s{font-size:10px;color:var(--t2);line-height:1.4}
+
+.plan-body{padding:18px 20px}
+.plan-comp{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+@media(max-width:500px){.plan-comp{grid-template-columns:1fr}}
+
+.comp-block{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:14px 16px}
+.comp-block-title{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t2);margin-bottom:10px}
+.comp-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--bd)}
+.comp-row:last-child{border-bottom:none}
+.comp-row span:first-child{font-size:12px;color:var(--t2)}
+.comp-row span:last-child{font-family:'Space Mono',monospace;font-size:12px;font-weight:700}
+.comp-total{display:flex;justify-content:space-between;padding-top:8px;margin-top:4px;border-top:1px solid var(--bd2)}
+.comp-total span:first-child{font-size:11px;font-weight:700;color:var(--tx)}
+.comp-total span:last-child{font-family:'Space Mono',monospace;font-size:13px;font-weight:700}
+
+.prog-wrap{background:rgba(255,255,255,0.06);border-radius:100px;height:7px;margin-bottom:7px;overflow:hidden}
+.prog-bar{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--gd),var(--gd2));transition:width .6s ease}
+.prog-vals{display:flex;justify-content:space-between;font-size:11px;color:var(--t2)}
+
+/* Gastos */
+.gasto-block{background:var(--s1);border:1px solid var(--bd);border-radius:12px;overflow:hidden}
+.gb-head{background:var(--s2);padding:11px 16px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
+.gb-title{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t2)}
+.gb-total{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--gd)}
+.gb-row{display:flex;justify-content:space-between;align-items:center;padding:9px 16px;border-bottom:1px solid var(--bd)}
+.gb-row:last-child{border-bottom:none}
+.gb-name{font-size:12px;color:var(--t2)}.gb-val{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--tx)}
+
+/* Orçamento variáveis */
+.var-table{width:100%;border-collapse:collapse}
+.var-table th{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t2);padding:10px 16px;text-align:right;background:var(--s2);border-bottom:1px solid var(--bd)}
+.var-table th:first-child{text-align:left}
+.var-table td{padding:9px 16px;font-size:12px;border-bottom:1px solid var(--bd)}
+.var-table td:not(:first-child){text-align:right;font-family:'Space Mono',monospace;font-weight:700}
+.var-table tr:last-child td{border-bottom:none}
+.var-table tr.vtr td{background:var(--s2);border-top:1px solid var(--bd2)}
+input.vi{
+  background:var(--s2);border:2px solid var(--gdbr);border-radius:8px;
+  padding:8px 14px;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;
+  color:var(--gd2);text-align:right;outline:none;
+  -webkit-appearance:none;-moz-appearance:textfield;appearance:textfield;
+  transition:border-color .15s,box-shadow .15s;
+}
+input.vi:focus{border-color:var(--gn);box-shadow:0 0 0 3px rgba(22,194,110,0.12);color:var(--gn)}
+input.vi::-webkit-outer-spin-button,input.vi::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.dpos{color:var(--gn)!important}.dneg{color:var(--rd)!important}
+.just-area{width:100%;background:var(--rdbg);border:1px solid var(--rdbr);border-radius:6px;padding:7px 10px;font-family:'Syne',sans-serif;font-size:11px;color:var(--tx);resize:none;outline:none;margin-top:4px}
+.just-area:focus{border-color:var(--rd)}
+
+/* Mês atual */
+.curr-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+@media(max-width:560px){.curr-kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:12px 14px}
+.kpi-l{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:5px}
+.kpi-v{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;line-height:1}
+
+/* Chart */
+.chart-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:22px 22px 18px}
+.chart-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:12px}
+.ct-info h3{font-size:13px;font-weight:700;color:#dde6f0}.ct-info p{font-size:11px;color:var(--t2);margin-top:2px}
+.leg-wrap{display:flex;gap:14px;flex-wrap:wrap}
+.leg-i{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t2)}
+.leg-d{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* Tables */
+.tw{overflow-x:auto;border:1px solid var(--bd);border-radius:12px}
+table{width:100%;border-collapse:collapse}
+thead th{font-size:9px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--t2);padding:10px 13px;text-align:right;background:var(--s1);white-space:nowrap;border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:2}
+thead th:first-child{text-align:left}
+th.tho{color:var(--gd)}th.thg{color:var(--gn)}th.thb{color:var(--bl)}
+tbody tr{border-top:1px solid var(--bd);transition:background .1s}
+tbody tr.cr{cursor:pointer}
+tbody tr.cr:hover td{background:var(--s2)!important}
+td{padding:9px 13px;font-family:'Space Mono',monospace;font-size:11px;text-align:right;white-space:nowrap;color:var(--tx)}
+td:first-child{font-family:'Syne',sans-serif;font-weight:600;font-size:11.5px;text-align:left;color:var(--t2)}
+.tg{color:var(--t3)!important}.tr{color:var(--rd)!important;font-weight:700}
+.tgr{color:var(--gn)!important;font-weight:700}.tgd{color:var(--gd)!important;font-weight:700}
+.tbl{color:var(--bl)!important}.tpu{color:var(--pu)!important}
+.tenc{color:var(--t3);font-size:9px;font-style:italic;font-family:'Syne',sans-serif;font-weight:400}
+
+tr.yr td{background:var(--s3)!important;border-top:2px solid var(--bd2)!important;padding:5px 13px}
+tr.yr td:first-child{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gd);font-family:'Syne',sans-serif}
+tr.proj td{background:rgba(61,142,240,0.04)!important;border-top:1px solid rgba(61,142,240,0.12)!important}
+tr.proj td:first-child{color:var(--bl)!important;font-family:'Syne',sans-serif;font-weight:700}
+tr.msr td{background:var(--gnbg)!important;border-top:1px solid var(--gnbr)!important}
+tr.msr td:first-child{color:var(--gn)!important;font-family:'Syne',sans-serif;font-weight:700}
+tr.evr td{background:var(--gdbg)!important;border-top:1px solid var(--gdbr)!important}
+tr.evr td:first-child{color:var(--gd)!important;font-family:'Syne',sans-serif;font-weight:700}
+tr.hint td{background:var(--gdbg)!important;text-align:center!important;font-family:'Syne',sans-serif;font-size:11px;color:var(--gd);padding:8px 13px;border-top:1px solid var(--gdbr)!important;cursor:default}
+
+.bdg{display:inline-block;font-size:8px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:3px;margin-left:6px;vertical-align:middle;font-family:'Syne',sans-serif}
+.bg{background:var(--gnbg);color:var(--gn);border:1px solid var(--gnbr)}
+.bb{background:var(--blbg);color:var(--bl);border:1px solid var(--blbr)}
+.bo{background:var(--gdbg);color:var(--gd);border:1px solid var(--gdbr)}
+.br{background:var(--rdbg);color:var(--rd);border:1px solid var(--rdbr)}
+.bpu{background:var(--pubg);color:var(--pu)}
+
+.sl{color:var(--gd)!important;font-weight:700!important}
+.sm{color:var(--tx)!important;font-weight:700!important}
+.sh2{color:var(--gn)!important;font-weight:700!important}
+.st{color:var(--gn)!important;font-weight:700!important;font-size:13px!important}
+
+/* Modal */
+.mbg{position:fixed;inset:0;background:rgba(0,5,15,0.7);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+.mbg.open{display:flex}
+.mod{background:var(--s1);border-radius:18px 18px 0 0;border:1px solid var(--bd2);border-bottom:none;width:100%;max-width:640px;max-height:88vh;overflow-y:auto;padding:26px 26px 44px;animation:su .22s cubic-bezier(.34,1.26,.64,1)}
+@keyframes su{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.mhd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px}
+.mti{font-size:20px;font-weight:800;letter-spacing:-.02em;color:#e8f0fa}.msu{font-size:11px;color:var(--t2);margin-top:3px}
+.mcl{background:var(--s3);border:1px solid var(--bd2);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;color:var(--t2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mcl:hover{background:var(--bd2)}
+.eg{margin-bottom:16px}
+.eg-hd{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gd);padding-bottom:7px;border-bottom:1px solid var(--bd)}
+.eg-r{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd)}
+.eg-r:last-child{border-bottom:none}
+.eg-n{font-size:12.5px;color:var(--t2)}.eg-v{font-family:'Space Mono',monospace;font-size:12.5px;font-weight:700}
+.eg-v.p{color:var(--rd)}.eg-v.n{color:var(--gn)}.eg-v.g{color:var(--tx)}.eg-v.b{color:var(--bl)}
+.eg-t{display:flex;justify-content:space-between;padding:8px 0 0;margin-top:4px;border-top:2px solid var(--bd2)}
+.eg-t span:last-child{font-family:'Space Mono',monospace;font-size:13px;font-weight:700}
+.msaldo{margin-top:16px;background:var(--s2);border-radius:10px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--bd)}
+.msaldo-l{font-size:9px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--t2)}
+.msaldo-v{font-family:'Space Mono',monospace;font-size:20px;font-weight:700}
+.mplan{margin-top:8px;background:var(--blbg);border-radius:8px;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--blbr)}
+.mplan-l{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bl)}
+.mplan-v{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--bl)}
+.mobs{margin-top:10px;font-size:12px;color:var(--t2);background:var(--gdbg);padding:12px 14px;border-radius:8px;line-height:1.75;border-left:3px solid var(--gd)}
+.mbadge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-bottom:12px}
+
+footer{margin-top:62px;padding-top:18px;border-top:1px solid var(--bd2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer p{font-size:11px;color:var(--t3)}
+.fb{font-size:11px;font-weight:700;color:var(--gd);letter-spacing:.12em;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<header>
+  <div>
+    <p class="eyebrow" style="margin-bottom:14px">Painel financeiro pessoal · histórico desde nov/2025</p>
+    <h1>Gleici <span>Oliveira</span></h1>
+    <p style="font-size:13px;color:var(--t2);margin-top:10px">Aposentada · Transformação financeira em andamento.</p>
+  </div>
+  <div class="hmeta">
+    <p>Referência: Abril 2026</p>
+    <p>Próxima revisão: Jul/2026</p>
+    <p style="color:var(--gn);margin-top:4px">● Plano Daycoval em execução</p>
+  </div>
+</header>
+
+<!-- CONQUISTAS -->
+<section>
+  <p class="sh">Conquistas documentadas</p>
+  <div class="g4">
+    <div class="card cg"><div class="cv g">− R$ 69k</div><div class="cl">Dívida reduzida</div><div class="cs">219k → 150k em saldo devedor</div></div>
+    <div class="card co"><div class="cv o">5</div><div class="cl">Contratos encerrados</div><div class="cs">Prev. Privada ×3, Consórcio, CIASPRE</div></div>
+    <div class="card cg"><div class="cv g">4 meses</div><div class="cl">Positivos seguidos</div><div class="cs">jan → fev → mar → abr/26</div></div>
+    <div class="card cb"><div class="cv b">Fev/26</div><div class="cl">Primeiro mês limpo</div><div class="cs">só aposentadoria, sem renda extra</div></div>
+  </div>
+</section>
+
+<!-- PLANO DAYCOVAL -->
+<section>
+  <p class="sh">Plano de quitação ativo</p>
+  <div class="plan-box">
+    <div class="plan-top">
+      <div>
+        <p class="plan-title">Plano Daycoval — Quitação do Cartão</p>
+        <p class="plan-sub">Dívida: R$ 14.500 · Execução: Junho 2026</p>
+      </div>
+      <span class="pill pill-gd">Em andamento</span>
+    </div>
+
+    <!-- Steps -->
+    <div class="plan-steps">
+      <div class="pstep done">
+        <p class="ps-m">Mar/26</p>
+        <p class="ps-v" style="color:var(--gn)">+ R$ 2.317</p>
+        <p class="ps-s">CDB liquidez<br><span class="bdg bg">realizado</span></p>
+      </div>
+      <div class="pstep active">
+        <p class="ps-m">Abr/26</p>
+        <p class="ps-v" style="color:var(--gd)">+ R$ 1.117</p>
+        <p class="ps-s">CDB liquidez<br><span class="bdg bo">projetado</span></p>
+      </div>
+      <div class="pstep active">
+        <p class="ps-m">Mai/26</p>
+        <p class="ps-v" style="color:var(--gd)">+ R$ 1.580</p>
+        <p class="ps-s">CDB liquidez<br><span class="bdg bo">projetado</span></p>
+      </div>
+      <div class="pstep active">
+        <p class="ps-m">Jun/26</p>
+        <p class="ps-v" style="color:var(--gd)">+ R$ 7.467</p>
+        <p class="ps-s">saldo R$1.967<br>+ décimo R$5.500</p>
+      </div>
+      <div class="pstep pending" style="background:rgba(22,194,110,0.05);opacity:1">
+        <p class="ps-m" style="color:var(--gn)">Jun/26</p>
+        <p class="ps-v" style="color:var(--gn)">R$ 14.500</p>
+        <p class="ps-s" style="color:var(--gn)">PAGAMENTO<br><span class="bdg bo">projetado</span></p>
+      </div>
+    </div>
+
+    <div class="plan-body">
+      <!-- Progress -->
+      <p style="font-size:9px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--t2);margin-bottom:8px">Progresso — CDB acumulado (realizado)</p>
+      <div class="prog-wrap"><div class="prog-bar" style="width:15.98%"></div></div>
+      <div class="prog-vals">
+        <span>R$ 2.317 acumulado · R$ 12.183 ainda a acu mular ou resgatar</span>
+        <span style="color:var(--gd);font-weight:700">15,98%</span>
+      </div>
+
+      <!-- Composição -->
+      <div class="plan-comp" style="margin-top:16px">
+        <div class="comp-block">
+          <p class="comp-block-title">Composição do pagamento</p>
+          <div class="comp-row"><span>CDB Mar/26</span><span style="color:var(--gn)">R$ 2.317,03</span></div>
+          <div class="comp-row"><span>CDB Abr/26</span><span style="color:var(--gd)">R$ 1.117,03</span></div>
+          <div class="comp-row"><span>CDB Mai/26</span><span style="color:var(--gd)">R$ 1.579,70</span></div>
+          <div class="comp-row"><span>Saldo Jun/26</span><span style="color:var(--gd)">R$ 1.967,00</span></div>
+          <div class="comp-row"><span>Décimo terceiro</span><span style="color:var(--gd)">R$ 5.500,00</span></div>
+          <div class="comp-row"><span>Resgate investimentos</span><span style="color:var(--bl)">R$ 2.019,24</span></div>
+          <div class="comp-total"><span>Total pagamento</span><span style="color:var(--gn)">R$ 14.500,00</span></div>
+        </div>
+        <div class="comp-block">
+          <p class="comp-block-title">Impacto nos investimentos</p>
+          <div class="comp-row"><span>Saldo atual (Mar/26)</span><span style="color:var(--gd)">R$ 56.953,00</span></div>
+          <div class="comp-row"><span>Resgate para quitação</span><span style="color:var(--rd)">− R$ 2.019,24</span></div>
+          <div class="comp-total"><span>Saldo pós-Daycoval</span><span style="color:var(--gn)">R$ 54.933,76</span></div>
+          <div style="margin-top:12px;padding:10px 12px;background:var(--gnbg);border:1px solid var(--gnbr);border-radius:8px">
+            <p style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gn);margin-bottom:4px">A partir de Jul/26</p>
+            <p style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--gn)">R$ 2.841/mês livre</p>
+            <p style="font-size:10px;color:var(--t2);margin-top:3px">Daycoval encerrado. CDI + reinvestimento.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Planos concluídos -->
+  <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
+    <p style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);margin-bottom:4px">Planos anteriores concluídos</p>
+    <div style="background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div><p style="font-size:13px;font-weight:600;color:var(--tx)">Encerramento Prev. Privada × 3 + Consórcio + CIASPRE</p>
+      <p style="font-size:11px;color:var(--t2);margin-top:2px">Contratos 317650 / 317651 / 317652 / Consórcio / CIASPRE · encerrados dez/2025</p></div>
+      <div style="text-align:right"><p style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--gn)">+ R$ 1.386/mês</p><p style="font-size:10px;color:var(--t3);margin-top:2px">liberados a partir de jan/26</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- GASTOS ESTRUTURADOS -->
+<section>
+  <p class="sh">Estrutura de gastos</p>
+  <div class="g2">
+    <!-- Comprometidos -->
+    <div>
+      <p style="font-size:10px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--t2);margin-bottom:10px">Comprometidos — imutáveis</p>
+      <div class="gasto-block">
+        <div class="gb-head"><span class="gb-title">Valor fixo mensal</span><span class="gb-total" id="tot-fix">—</span></div>
+        <div id="fix-list"></div>
+      </div>
+    </div>
+    <!-- Essenciais -->
+    <div>
+      <p style="font-size:10px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--t2);margin-bottom:10px">Essenciais — baixíssima variação</p>
+      <div class="gasto-block">
+        <div class="gb-head"><span class="gb-title">Referência mensal</span><span class="gb-total" id="tot-ess">—</span></div>
+        <div id="ess-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Variáveis orçadas -->
+  <div style="margin-top:16px">
+    <p style="font-size:10px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--t2);margin-bottom:10px">Variáveis orçadas — acompanhamento Abr/26</p>
+    <div class="gasto-block" style="overflow-x:auto">
+      <table class="var-table">
+        <thead><tr>
+          <th style="text-align:left;min-width:140px">Categoria</th>
+          <th>Orçado</th><th>Realizado</th><th>Diferença</th>
+        </tr></thead>
+        <tbody id="var-body"></tbody>
+      </table>
+    </div>
+    <p style="font-size:10px;color:var(--t3);margin-top:8px">Edite o "Realizado" para calcular a diferença. Vermelho = acima do orçado, exige justificativa.</p>
+  </div>
+</section>
+
+<!-- MÊS ATUAL -->
+<section>
+  <p class="sh">Mês atual — Abril 2026 <span class="bdg bo" style="vertical-align:middle;margin-left:8px">projetado</span></p>
+  <div style="background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:20px">
+    <div class="curr-kpis" id="curr-kpis"></div>
+    <div style="overflow-x:auto;border:1px solid var(--bd);border-radius:8px">
+      <table class="var-table" id="curr-table">
+        <thead><tr>
+          <th style="text-align:left;min-width:150px">Item</th>
+          <th>Tipo</th><th>Previsto</th><th>Realizado</th><th>Diff</th>
+        </tr></thead>
+        <tbody id="curr-body"></tbody>
+      </table>
+    </div>
+    <p style="font-size:10px;color:var(--t3);margin-top:10px">Saldo projetado = 0 — toda a sobra é direcionada ao Plano Daycoval (R$ 1.117,03). Edite o realizado para acompanhar.</p>
+  </div>
+</section>
+
+<!-- GRÁFICO -->
+<section>
+  <p class="sh">Evolução patrimonial</p>
+  <div class="chart-card">
+    <div class="chart-top">
+      <div class="ct-info">
+        <h3>Dívida total vs. Patrimônio investido</h3>
+        <p>Dívida: Nov/25 → Out/31 · Patrimônio: a partir de Mar/26 (R$ 56.953) · CDI 10,75% a.a. + sobra reinvestida a partir de Jul/26</p>
+      </div>
+      <div class="leg-wrap">
+        <div class="leg-i"><div class="leg-d" style="background:var(--rd)"></div>Saldo devedor</div>
+        <div class="leg-i"><div class="leg-d" style="background:var(--gn)"></div>Patrimônio investido</div>
+        <div class="leg-i"><div class="leg-d" style="background:var(--gd);border-radius:0"></div>Abr–Jun (projetado)</div>
+      </div>
+    </div>
+    <canvas id="chart" height="190"></canvas>
+  </div>
+</section>
+
+<!-- HISTÓRICO -->
+<section>
+  <p class="sh">Histórico · novembro 2025 a julho 2026</p>
+  <h2>Clique em qualquer mês para ver o detalhamento completo</h2>
+  <div class="tw">
+    <table style="min-width:820px;width:100%">
+      <thead><tr>
+        <th style="text-align:left;min-width:130px">Mês</th>
+        <th>Ativo Mês</th><th>Passivo Mês</th>
+        <th class="thb">Plano Daycoval</th>
+        <th class="tho">Investimentos</th>
+        <th class="thg">Saldo em conta</th>
+      </tr></thead>
+      <tbody id="hb"></tbody>
+    </table>
+  </div>
+  <p style="font-size:10px;color:var(--t3);margin-top:10px;line-height:1.8">Saldo em conta = caixa real ao final do mês (da planilha). Meses com saldo 0 tiveram toda a sobra direcionada ao Plano Daycoval. Meses em azul = projetados com base no plano.</p>
+</section>
+
+<!-- PROJEÇÃO -->
+<section>
+  <p class="sh">Projeção · julho 2026 a outubro 2031</p>
+  <h2>Parcelas encerrando · sobra crescendo · patrimônio acumulando com CDI</h2>
+  <div class="tw">
+    <table style="min-width:700px;width:100%">
+      <thead><tr>
+        <th style="text-align:left;min-width:140px">Mês</th>
+        <th>INTERME</th><th>BCO SAF</th><th>CLICKBANK</th>
+        <th>Gastos base *</th><th>Total saída</th>
+        <th class="tho">Patrimônio †</th><th class="thg">Sobra</th>
+      </tr></thead>
+      <tbody id="pb"></tbody>
+    </table>
+  </div>
+  <p style="font-size:10px;color:var(--t3);margin-top:10px;line-height:1.8">
+    * Gastos base = R$ 4.915,73 (IR R$2.018 + INSS R$448 + água+luz R$400 + cel+net+consul R$500 + mercado+lazer R$1.550).<br>
+    † Patrimônio: 54.933,76 em Jul/26 + CDI 0,854%/mês + sobra reinvestida mensalmente.
+  </p>
+</section>
+
+<footer>
+  <p>Documento pessoal e confidencial · Acompanhamento desde nov/2025</p>
+  <p class="fb">Ricardo · Consultoria Financeira</p>
+</footer>
+</div>
+
+<!-- MODAL -->
+<div class="mbg" id="mbg" onclick="mchk(event)">
+  <div class="mod">
+    <div class="mhd">
+      <div><p class="mti" id="mti">—</p><p class="msu" id="msu">—</p></div>
+      <button class="mcl" onclick="mcls()">✕</button>
+    </div>
+    <div id="mb"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// ── CONSTANTS ──────────────────────────────────────────────
+const APOS   = 11242.28;
+const CDI_MM = 0.008545;
+const GASTOS_BASE = 4915.73;
+const IN_V=2669.45,IN_N=38, SAF_V=499.02,SAF_N=56, CL_V=317.38,CL_N=67, DAYBCO_V=462.67;
+const INV_MAR = 56953, INV_JUL = 54933.76;
+
+// ── HELPERS ────────────────────────────────────────────────
+function brl(v,d=0){return 'R$\u00a0'+Math.abs(v).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function b2(v){return brl(v,2)}
+function fmtMes(d){return d.toLocaleDateString('pt-BR',{month:'short',year:'2-digit'}).replace('.','').replace(/^\w/,c=>c.toUpperCase())}
+
+// ── UNIFIED EXPENSE DATA — single source of truth ──────────
+// All non-parcela expenses for April 2026
+// ref = reference/budget | act = actual (editable) | orc = has budget target
+const EXPENSES = [
+  {n:'Imposto de Renda',     tipo:'obrigatório', ref:2017.56, act:2017.56},
+  {n:'INSS / Seg. Social',   tipo:'obrigatório', ref:448.17,  act:448.17 },
+  {n:'Celular',              tipo:'fixo',         ref:100,     act:100    },
+  {n:'Internet',             tipo:'fixo',         ref:100,     act:100    },
+  {n:'Consultoria',          tipo:'fixo',         ref:300,     act:300    },
+  {n:'Água',                 tipo:'essencial',    ref:150,     act:150    },
+  {n:'Luz',                  tipo:'essencial',    ref:250,     act:250    },
+  {n:'Supermercado',         tipo:'variável',     ref:900,     act:900    },
+  {n:'Lazer',                tipo:'variável',     ref:650,     act:650    },
+  {n:'Extras / Imprevistos', tipo:'livre',        ref:null,    act:1261   },
+];
+
+let planoDaycoval = 1117.03;
+
+// ── CALC SALDO ─────────────────────────────────────────────
+function calcSaldo(){
+  const parcelas = IN_V + SAF_V + CL_V + DAYBCO_V;
+  const gastos   = EXPENSES.reduce((s,e)=>s+e.act, 0);
+  const total    = parcelas + gastos + planoDaycoval;
+  return { parcelas, gastos, total, saldo: APOS - total };
+}
+
+// ── UPDATE KPIs ────────────────────────────────────────────
+function updKpis(){
+  const {parcelas, gastos, saldo} = calcSaldo();
+  const sc = saldo > 0.5 ? 'tgr' : saldo < -0.5 ? 'tr' : 'tgd';
+  document.getElementById('curr-kpis').innerHTML = `
+    <div class="kpi"><p class="kpi-l">Aposentadoria</p><p class="kpi-v tgd">${b2(APOS)}</p></div>
+    <div class="kpi"><p class="kpi-l">Parcelas</p><p class="kpi-v tr">${b2(parcelas)}</p></div>
+    <div class="kpi"><p class="kpi-l">Gastos + Plano</p><p class="kpi-v" style="color:var(--t2)">${b2(gastos + planoDaycoval)}</p></div>
+    <div class="kpi"><p class="kpi-l">Saldo projetado</p><p class="kpi-v ${sc}">${saldo>=0?'+':''}${b2(saldo)}</p></div>`;
+}
+
+// ── RENDER GASTOS TABLE ────────────────────────────────────
+const TIPO_COLOR = {
+  'obrigatório':'var(--rd)',
+  'fixo':'var(--t2)',
+  'essencial':'var(--bl)',
+  'variável':'var(--gd)',
+  'livre':'var(--pu)',
+};
+const TIPO_ORDER = ['obrigatório','fixo','essencial','variável','livre'];
+
+function renderGastos(){
+  let rows = '', totRef = 0, totAct = 0;
+  let lastTipo = null;
+
+  EXPENSES.forEach((e,i)=>{
+    // Group separator row
+    if(e.tipo !== lastTipo){
+      lastTipo = e.tipo;
+      rows += `<tr style="background:var(--s3)"><td colspan="5" style="padding:5px 16px;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:${TIPO_COLOR[e.tipo]||'var(--t2)'};font-family:'Syne',sans-serif">${e.tipo.toUpperCase()}</td></tr>`;
+    }
+    const hasRef = e.ref !== null;
+    if(hasRef) totRef += e.ref;
+    totAct += e.act;
+    const diff  = hasRef ? (e.ref - e.act) : null;
+    const over  = hasRef && diff < 0;
+    const refCell  = hasRef ? b2(e.ref) : '<span style="color:var(--t3)">—</span>';
+    const diffCell = hasRef
+      ? `<span class="${over?'dneg':'dpos'}">${over?'−':'+ '}${b2(Math.abs(diff))}</span>`
+      : '<span style="color:var(--t3)">—</span>';
+
+    rows += `<tr>
+      <td style="color:var(--tx);padding-left:20px">${e.n}</td>
+      <td style="font-family:'Syne',sans-serif;font-size:10px;color:${TIPO_COLOR[e.tipo]||'var(--t2)'};">${e.tipo}</td>
+      <td style="color:var(--t2)">${refCell}</td>
+      <td><input class="vi" type="number" value="${e.act}" min="0" step="0.01"
+          data-idx="${i}" oninput="updExpense(this)" style="width:130px"></td>
+      <td>${diffCell}</td>
+    </tr>`;
+    if(over){
+      rows += `<tr style="background:var(--rdbg)"><td colspan="5" style="padding:4px 20px 10px">
+        <p style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--rd);margin-bottom:5px">Justificativa do excesso</p>
+        <textarea class="just-area" rows="2" placeholder="Descreva o motivo..."></textarea>
+      </td></tr>`;
+    }
+  });
+
+  // Subtotal row
+  const dTot = totRef - totAct, overTot = dTot < 0;
+  rows += `<tr style="background:var(--s2);border-top:2px solid var(--bd2)">
+    <td colspan="2" style="font-weight:700;color:var(--tx);padding-left:16px">Total gastos</td>
+    <td style="font-weight:700;color:var(--gd)">${b2(totRef)}</td>
+    <td class="${overTot?'dneg':'dpos'}" style="font-weight:700">${b2(totAct)}</td>
+    <td class="${overTot?'dneg':'dpos'}" style="font-weight:700">${overTot?'−':'+ '}${b2(Math.abs(dTot))}</td>
+  </tr>`;
+
+  document.getElementById('gastos-body').innerHTML = rows;
+  document.getElementById('tot-ref').textContent  = b2(totRef);
+  const lbl = document.getElementById('tot-real-lbl');
+  lbl.textContent = b2(totAct);
+  lbl.className = overTot ? 'dneg' : 'dpos';
+}
+
+function updExpense(el){
+  const i = parseInt(el.dataset.idx);
+  EXPENSES[i].act = parseFloat(el.value) || 0;
+  renderGastos();
+  updKpis();
+}
+
+function updPlan(el){
+  planoDaycoval = parseFloat(el.value) || 0;
+  updKpis();
+}
+
+renderGastos();
+updKpis();
+
+// ── HISTORY DATA ───────────────────────────────────────────
+const H=[
+  {m:'Nov/25',y:'2025',type:'realizado',
+   ativoMes:30671.26,passivoMes:14813.90,planoDaycoval:0,investimentos:-10000,saldo:-303.20,
+   debtTotal:219275.83,
+   dt:{
+     ativos:[{n:'Aposentadoria',v:11242.28},{n:'Parcelas AP (3×)',v:8000},{n:'Parcela filho',v:1428.98},{n:'Baixa investimentos',v:10000}],
+     passivos:[
+       {n:'INTERME',v:2669.45,t:'p'},{n:'BCO SAF',v:499.02,t:'p'},{n:'Clickbank',v:317.38,t:'p'},{n:'Daycoval',v:462.67,t:'p'},
+       {n:'Prev. Privada × 3',v:511.94,t:'p'},{n:'Consórcio',v:853.70,t:'p'},{n:'CIASPRE',v:20,t:'p'},
+       {n:'IR',v:2017.56,t:'f'},{n:'INSS',v:448.17,t:'f'},{n:'Parcelas cartão',v:1428.98,t:'f'},
+       {n:'Água',v:150,t:'e'},{n:'Luz',v:250,t:'e'},{n:'Celular',v:100,t:'e'},{n:'Internet',v:100,t:'e'},
+       {n:'Supermercado',v:900,t:'v'},{n:'Lazer',v:450,t:'v'},{n:'Custo extra',v:2200,t:'v'},{n:'Despesas ajuste',v:1435.03,t:'v'},
+     ],
+     inv:-10000,
+     obs:'Início do acompanhamento. Todos os contratos ativos. Resgate de R$ 10.000 dos investimentos para cobrir o déficit do mês.'
+   }},
+  {m:'Dez/25',y:'2025',type:'realizado',
+   ativoMes:18939.08,passivoMes:19434.25,planoDaycoval:0,investimentos:5800,saldo:-495.17,
+   debtTotal:197852.08,
+   dt:{
+     ativos:[{n:'Aposentadoria',v:11242.28},{n:'Parcelas AP (2×)',v:8000},{n:'Saldo anterior',v:-303.20}],
+     passivos:[
+       {n:'INTERME',v:2669.45,t:'p'},{n:'BCO SAF',v:499.02,t:'p'},{n:'Clickbank',v:317.38,t:'p'},{n:'Daycoval',v:462.67,t:'p'},
+       {n:'CIASPRE',v:20,t:'p'},
+       {n:'IR',v:2017.56,t:'f'},{n:'INSS',v:448.17,t:'f'},
+       {n:'Água',v:150,t:'e'},{n:'Luz',v:250,t:'e'},{n:'Celular',v:100,t:'e'},{n:'Internet',v:100,t:'e'},
+       {n:'Supermercado',v:900,t:'v'},{n:'Lazer',v:4300,t:'v'},{n:'Despesas extras',v:1400,t:'v'},{n:'Investimento',v:5800,t:'v'},
+     ],
+     inv:5800,
+     obs:'Prev. Privada × 3 e Consórcio encerrados (plano concluído). Lazer R$ 4.300 (festas de dezembro). Investimento de R$ 5.800 realizado.'
+   }},
+  {m:'Jan/26',y:'2026',type:'realizado',
+   ativoMes:19147.11,passivoMes:18547.11,planoDaycoval:0,investimentos:4000,saldo:600,
+   debtTotal:161106.23,
+   dt:{
+     ativos:[{n:'Aposentadoria',v:11242.28},{n:'Parcelas AP (1×)',v:8000},{n:'Saldo anterior',v:-495.17},{n:'Recebimento',v:400}],
+     passivos:[
+       {n:'INTERME',v:2669.45,t:'p'},{n:'BCO SAF',v:499.02,t:'p'},{n:'Clickbank',v:317.38,t:'p'},{n:'Daycoval',v:462.67,t:'p'},
+       {n:'IR',v:2017.56,t:'f'},{n:'INSS',v:448.17,t:'f'},{n:'Consultoria',v:300,t:'f'},
+       {n:'Água',v:150,t:'e'},{n:'Luz',v:250,t:'e'},{n:'Celular',v:100,t:'e'},{n:'Internet',v:100,t:'e'},
+       {n:'Supermercado',v:900,t:'v'},{n:'Lazer',v:650,t:'v'},{n:'Fatura filho',v:1622,t:'v'},{n:'Praia/Casa',v:730,t:'v'},
+       {n:'Transferência BTG',v:4000,t:'v'},{n:'Outros',v:1307.86,t:'v'},
+     ],
+     inv:4000,
+     obs:'Último mês das Parcelas AP. Transferência R$ 4.000 para BTG (investimento). Primeiro saldo positivo: R$ 600. CIASPRE encerrado.'
+   }},
+  {m:'Fev/26',y:'2026',type:'realizado',
+   ativoMes:11714.25,passivoMes:9914.25,planoDaycoval:0,investimentos:0,saldo:1800,
+   debtTotal:172120.38,
+   dt:{
+     ativos:[{n:'Aposentadoria',v:11242.28},{n:'Saldo anterior',v:600},{n:'Uso excepcional',v:-128.03}],
+     passivos:[
+       {n:'INTERME',v:2669.45,t:'p'},{n:'BCO SAF',v:499.02,t:'p'},{n:'Clickbank',v:317.38,t:'p'},{n:'Daycoval',v:462.67,t:'p'},
+       {n:'IR',v:2017.56,t:'f'},{n:'INSS',v:448.17,t:'f'},{n:'Consultoria',v:300,t:'f'},
+       {n:'Água',v:150,t:'e'},{n:'Luz',v:250,t:'e'},{n:'Celular',v:100,t:'e'},{n:'Internet',v:100,t:'e'},
+       {n:'Supermercado',v:900,t:'v'},{n:'Lazer',v:600,t:'v'},{n:'Gasto extra',v:1100,t:'v'},
+     ],
+     inv:0,
+     obs:'Primeiro mês dependendo 100% da aposentadoria. Nenhuma renda extra. Mudança real de comportamento financeiro — saldo R$ 1.800.'
+   }},
+  {m:'Mar/26',y:'2026',type:'realizado',
+   ativoMes:13042.28,passivoMes:13042.28,planoDaycoval:2317.03,investimentos:0,saldo:0,
+   debtTotal:168634.53,
+   dt:{
+     ativos:[{n:'Aposentadoria',v:11242.28},{n:'Saldo anterior',v:1800}],
+     passivos:[
+       {n:'INTERME',v:2669.45,t:'p'},{n:'BCO SAF',v:499.02,t:'p'},{n:'Clickbank',v:317.38,t:'p'},{n:'Daycoval',v:462.67,t:'p'},
+       {n:'IR',v:2017.56,t:'f'},{n:'INSS',v:448.17,t:'f'},{n:'Consultoria',v:300,t:'f'},
+       {n:'Água',v:150,t:'e'},{n:'Luz',v:250,t:'e'},{n:'Celular',v:100,t:'e'},{n:'Internet',v:100,t:'e'},
+       {n:'Supermercado',v:900,t:'v'},{n:'Lazer',v:650,t:'v'},{n:'Fatura cartão',v:1261,t:'v'},{n:'Gasto extra',v:600,t:'v'},
+       {n:'Plano Daycoval → CDB',v:2317.03,t:'b'},
+     ],
+     inv:0, planoDaycoval:2317.03,
+     obs:'Toda a sobra do mês (R$ 2.317,03) foi alocada no CDB de liquidez diária para o Plano Daycoval. Saldo em conta = R$ 0.'
+   }},
+  {m:'Abr/26',y:'2026',type:'projetado',
+   ativoMes:11242.28,passivoMes:11242.28,planoDaycoval:1117.03,investimentos:0,saldo:0,
+   debtTotal:165148.68,
+   dt:{
+     ativos:[{n:'Aposentadoria',v:11242.28},{n:'Saldo anterior',v:0}],
+     passivos:[
+       {n:'INTERME',v:2669.45,t:'p'},{n:'BCO SAF',v:499.02,t:'p'},{n:'Clickbank',v:317.38,t:'p'},{n:'Daycoval',v:462.67,t:'p'},
+       {n:'IR',v:2017.56,t:'f'},{n:'INSS',v:448.17,t:'f'},{n:'Consultoria',v:300,t:'f'},
+       {n:'Água',v:150,t:'e'},{n:'Luz',v:250,t:'e'},{n:'Celular',v:100,t:'e'},{n:'Internet',v:100,t:'e'},
+       {n:'Supermercado',v:900,t:'v'},{n:'Lazer',v:650,t:'v'},{n:'Fatura cartão',v:1261,t:'v'},
+       {n:'Plano Daycoval → CDB',v:1117.03,t:'b'},
+     ],
+     inv:0, planoDaycoval:1117.03,
+     obs:'PROJETADO. Toda a sobra (R$ 1.117,03) direcionada ao Plano Daycoval. Saldo = 0.'
+   }},
+  {m:'Mai/26',y:'2026',type:'projetado',
+   ativoMes:11242.28,passivoMes:11242.28,planoDaycoval:1579.70,investimentos:0,saldo:0,
+   debtTotal:161662.83,
+   dt:{
+     ativos:[{n:'Aposentadoria',v:11242.28},{n:'Saldo anterior',v:0}],
+     passivos:[
+       {n:'INTERME',v:2669.45,t:'p'},{n:'BCO SAF',v:499.02,t:'p'},{n:'Clickbank',v:317.38,t:'p'},{n:'Daycoval',v:462.67,t:'p'},
+       {n:'IR',v:2017.56,t:'f'},{n:'INSS',v:448.17,t:'f'},{n:'Consultoria',v:300,t:'f'},
+       {n:'Água',v:150,t:'e'},{n:'Luz',v:250,t:'e'},{n:'Celular',v:100,t:'e'},{n:'Internet',v:100,t:'e'},
+       {n:'Supermercado',v:900,t:'v'},{n:'Lazer',v:650,t:'v'},{n:'Fatura cartão',v:1261,t:'v'},
+       {n:'Plano Daycoval → CDB',v:1579.70,t:'b'},
+     ],
+     inv:0, planoDaycoval:1579.70,
+     obs:'PROJETADO. Toda a sobra (R$ 1.579,70) direcionada ao Plano Daycoval. Saldo = 0.'
+   }},
+  {m:'Jun/26',y:'2026',type:'projetado',
+   ativoMes:23775.28,passivoMes:9275.25,planoDaycoval:14500,investimentos:0,saldo:0.03,
+   debtTotal:143676.98,
+   dt:{
+     ativos:[{n:'Aposentadoria',v:11242.28},{n:'Décimo terceiro',v:5500},{n:'Resgate CDB Daycoval',v:5013.76},{n:'Resgate conta investimentos',v:2019.24}],
+     passivos:[
+       {n:'INTERME',v:2669.45,t:'p'},{n:'BCO SAF',v:499.02,t:'p'},{n:'Clickbank',v:317.38,t:'p'},{n:'Daycoval',v:462.67,t:'p'},
+       {n:'IR',v:2017.56,t:'f'},{n:'INSS',v:448.17,t:'f'},{n:'Consultoria',v:300,t:'f'},
+       {n:'Água',v:150,t:'e'},{n:'Luz',v:250,t:'e'},{n:'Celular',v:100,t:'e'},{n:'Internet',v:100,t:'e'},
+       {n:'Supermercado',v:900,t:'v'},{n:'Lazer',v:650,t:'v'},{n:'Cartão fatura',v:411,t:'v'},
+       {n:'PAGAMENTO DAYCOVAL',v:14500,t:'b'},
+     ],
+     inv:-2019.24, planoDaycoval:14500,
+     obs:'PROJETADO — EXECUÇÃO DO PLANO. CDB R$ 5.013,76 + Saldo R$ 1.967 + Décimo R$ 5.500 + Resgate investimentos R$ 2.019,24 = R$ 14.500. DAYCOVAL ENCERRADO.'
+   }},
+  {m:'Jul/26',y:'2026',type:'projetado',
+   ativoMes:11242.31,passivoMes:8401.58,planoDaycoval:0,investimentos:0,saldo:2840.73,
+   debtTotal:140191.13,
+   dt:{
+     ativos:[{n:'Aposentadoria',v:11242.28},{n:'Saldo anterior',v:0.03}],
+     passivos:[
+       {n:'INTERME',v:2669.45,t:'p'},{n:'BCO SAF',v:499.02,t:'p'},{n:'Clickbank',v:317.38,t:'p'},
+       {n:'IR',v:2017.56,t:'f'},{n:'INSS',v:448.17,t:'f'},{n:'Consultoria',v:300,t:'f'},
+       {n:'Água',v:150,t:'e'},{n:'Luz',v:250,t:'e'},{n:'Celular',v:100,t:'e'},{n:'Internet',v:100,t:'e'},
+       {n:'Supermercado',v:900,t:'v'},{n:'Lazer',v:650,t:'v'},
+     ],
+     inv:0,
+     obs:'PROJETADO. Daycoval encerrado — fluxo aliviado. Sobra de R$ 2.841 disponível para investimento e/ou uso. Sem fatura cartão neste mês.'
+   }},
+];
+
+// ── HISTORY TABLE ───────────────────────────────────────────
+let ly='',hr='';
+hr+=`<tr class="hint"><td colspan="6">↓ Clique em qualquer mês para ver o detalhamento completo</td></tr>`;
+H.forEach((h,i)=>{
+  if(h.y!==ly){ly=h.y.toString();hr+=`<tr class="yr"><td colspan="6">── ${h.y}</td></tr>`;}
+  const isproj=h.type==='projetado';
+  const sc=h.saldo>0.1?'tgr':h.saldo<-0.1?'tr':'tgd';
+  const pv=h.planoDaycoval>0?`<span class="tbl">${brl(h.planoDaycoval)}</span>`:`<span class="tg">—</span>`;
+  const iv=h.investimentos>0?`<span class="tbl">+${brl(h.investimentos)}</span>`:h.investimentos<0?`<span class="tr">−${brl(Math.abs(h.investimentos))}</span>`:`<span class="tg">—</span>`;
+  const typeBadge=isproj?`<span class="bdg bb">projetado</span>`:`<span class="bdg bg">realizado</span>`;
+  hr+=`<tr class="cr ${isproj?'proj':''}" onclick="mopen(${i})">
+    <td>${h.m}${typeBadge}<br><span class="tenc">ver detalhes ↗</span></td>
+    <td class="tgd">${brl(h.ativoMes)}</td>
+    <td class="tr">${brl(h.passivoMes)}</td>
+    <td>${pv}</td>
+    <td>${iv}</td>
+    <td class="${sc}">${h.saldo===0?`<span class="tgd">R$\u00a00</span>`:brl(Math.abs(h.saldo))}</td>
+  </tr>`;
+});
+document.getElementById('hb').innerHTML=hr;
+
+// ── CHART ───────────────────────────────────────────────────
+function buildChart(){
+  const labels=[], dl=[], il=[];
+  // Debt from sheet per month
+  const DEBT_HIST=[219275.83,197852.08,161106.23,172120.38,168634.53,165148.68,161662.83,158176.98,143676.98,140191.13];
+  H.forEach((h,i)=>{
+    const d=new Date(2025,10+i,1);
+    labels.push(fmtMes(d));
+    dl.push(DEBT_HIST[i]);
+    // Investment: only show from Mar/26 (index 4)
+    il.push(i>=4 ? (i===4?INV_MAR : i===5?INV_MAR*(1+CDI_MM) : i===6?INV_MAR*(1+CDI_MM)**2 : i===7?INV_MAR*(1+CDI_MM)**3-2019.24 : INV_JUL) : null);
+  });
+  // Projection from Aug/26 (continue after Jul)
+  let debt=140191.13, inv=INV_JUL;
+  for(let i=1;i<65;i++){
+    const d=new Date(2026,7+i-1,1); // Aug/26 = i=1
+    labels.push(fmtMes(d));
+    const par=(i+3<IN_N?IN_V:0)+(i+3<SAF_N?SAF_V:0)+(i+3<CL_N?CL_V:0);
+    debt=Math.max(0,debt-par);
+    dl.push(Math.round(debt));
+    const sob=APOS-GASTOS_BASE-par;
+    inv=inv*(1+CDI_MM)+(sob>0?sob:0);
+    il.push(Math.round(inv));
+  }
+  return{labels,dl,il};
+}
+const{labels:CL,dl:DA,il:IA}=buildChart();
+const ctx=document.getElementById('chart').getContext('2d');
+const gd=ctx.createLinearGradient(0,0,0,260);gd.addColorStop(0,'rgba(224,64,64,0.15)');gd.addColorStop(1,'rgba(224,64,64,0)');
+const gi=ctx.createLinearGradient(0,0,0,260);gi.addColorStop(0,'rgba(22,194,110,0.13)');gi.addColorStop(1,'rgba(22,194,110,0)');
+new Chart(ctx,{type:'line',data:{labels:CL,datasets:[
+  {label:'Saldo devedor',data:DA,borderColor:'#e04040',borderWidth:2,backgroundColor:gd,fill:true,tension:.35,pointRadius:0,pointHitRadius:12},
+  {label:'Patrimônio (CDI)',data:IA,borderColor:'#16c26e',borderWidth:2,backgroundColor:gi,fill:true,tension:.3,pointRadius:0,pointHitRadius:12,borderDash:[6,4],spanGaps:false}
+]},options:{responsive:true,interaction:{mode:'index',intersect:false},
+  plugins:{legend:{display:false},tooltip:{backgroundColor:'#0d1119',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,titleColor:'#6e8099',bodyColor:'#c8d4e0',titleFont:{family:'Syne',size:10},bodyFont:{family:'Space Mono',size:11},padding:12,cornerRadius:8,
+    callbacks:{label:c=>c.parsed.y!=null?` ${c.dataset.label}: R$ ${c.parsed.y.toLocaleString('pt-BR')}`:null}}},
+  scales:{x:{grid:{color:'rgba(255,255,255,0.03)',drawTicks:false},border:{display:false},ticks:{color:'#384455',font:{family:'Space Mono',size:9},maxTicksLimit:14,maxRotation:0}},
+  y:{grid:{color:'rgba(255,255,255,0.04)',drawTicks:false},border:{display:false},ticks:{color:'#384455',font:{family:'Space Mono',size:9},callback:v=>'R$'+Math.round(v/1000)+'k'}}}}});
+
+// ── PROJECTION TABLE ─────────────────────────────────────────
+let lpy='',pr='';
+let pinv=INV_JUL;
+function getInvProjected(i){
+  // i=0 = Jul/26, i=1 = Aug/26...
+  if(i===0) return INV_JUL;
+  let inv2=INV_JUL;
+  for(let j=1;j<=i;j++){
+    const par2=((j)<IN_N?IN_V:0)+((j)<SAF_N?SAF_V:0)+((j)<CL_N?CL_V:0);
+    const sob=APOS-GASTOS_BASE-par2;
+    inv2=inv2*(1+CDI_MM)+(sob>0?sob:0);
+  }
+  return Math.round(inv2);
+}
+for(let i=0;i<65;i++){
+  const d=new Date(2026,6+i,1); // Jul/26 = i=0
+  const yr=d.getFullYear().toString();
+  if(yr!==lpy){lpy=yr;pr+=`<tr class="yr"><td colspan="8">── ${yr}</td></tr>`;}
+  // parcelas: offset by 3 months from Apr/26 base (Jul/26 = i=3 from Apr)
+  const iAdj=i+3;
+  const par=(iAdj<IN_N?IN_V:0)+(iAdj<SAF_N?SAF_V:0)+(iAdj<CL_N?CL_V:0);
+  const tot=GASTOS_BASE+par, sob=APOS-tot;
+  const isI=iAdj===IN_N, isS=iAdj===SAF_N, isC=iAdj===CL_N;
+  let bdg='';
+  if(isI) bdg='<span class="bdg bg">INTERME encerrado · ↑ R$2.669/mês</span>';
+  if(isS) bdg='<span class="bdg bg">BCO SAF encerrado · ↑ R$499/mês</span>';
+  if(isC) bdg='<span class="bdg bg">Clickbank encerrado · ↑ R$317/mês</span>';
+  let sc=sob>=6000?'st':sob>=5000?'sh2':sob>=3500?'sm':'sl';
+  const iC=iAdj<IN_N?`<td class="tr">${b2(IN_V)}</td>`:`<td class="tg">—</td>`;
+  const sC=iAdj<SAF_N?`<td class="tr">${b2(SAF_V)}</td>`:`<td class="tg">—</td>`;
+  const cC=iAdj<CL_N?`<td class="tr">${b2(CL_V)}</td>`:`<td class="tg">—</td>`;
+  const rc=isI||isS||isC?'msr':'';
+  const invVal=getInvProjected(i);
+  pr+=`<tr${rc?` class="${rc}"`:''}>
+    <td>${fmtMes(d)}${bdg}</td>${iC}${sC}${cC}
+    <td style="color:var(--t2)">${b2(GASTOS_BASE)}</td>
+    <td style="color:var(--t2)">${b2(tot)}</td>
+    <td class="tgd">${brl(invVal)}</td>
+    <td class="${sc}">${b2(sob)}</td>
+  </tr>`;
+}
+document.getElementById('pb').innerHTML=pr;
+
+// ── MODAL ────────────────────────────────────────────────────
+function grp(lbl,items,cls){
+  const f=items.filter(r=>r.v&&r.v>0);
+  if(!f.length)return'';
+  const rows=f.map(r=>`<div class="eg-r"><span class="eg-n">${r.n}${r.nt?` <small style="color:var(--t3)">(${r.nt})</small>`:''}</span><span class="eg-v ${cls}">${b2(r.v)}</span></div>`).join('');
+  const tot=f.reduce((s,r)=>s+r.v,0);
+  return`<div class="eg"><p class="eg-hd">${lbl}</p>${rows}<div class="eg-t"><span style="font-size:12px;font-weight:700;color:var(--tx)">${lbl}</span><span style="color:${cls==='p'?'var(--rd)':cls==='n'?'var(--gn)':cls==='b'?'var(--bl)':'var(--tx)'}">${b2(tot)}</span></div></div>`;
+}
+function mopen(i){
+  const h=H[i],d=h.dt;
+  document.getElementById('mti').textContent=h.m;
+  document.getElementById('msu').textContent=`Ativo: ${brl(h.ativoMes)} · Passivo: ${brl(h.passivoMes)}`;
+  const typeBadge=h.type==='projetado'?`<span class="mbadge" style="background:var(--blbg);color:var(--bl);border:1px solid var(--blbr)">Projetado — Plano Daycoval</span>`
+    :`<span class="mbadge" style="background:var(--gnbg);color:var(--gn);border:1px solid var(--gnbr)">Realizado</span>`;
+  document.getElementById('mb').innerHTML=
+    typeBadge+
+    grp('Receitas do mês',d.ativos,'n')+
+    grp('Parcelas / contratos',d.passivos.filter(p=>p.t==='p'),'p')+
+    grp('Comprometidos fixos (IR, INSS, serviços)',d.passivos.filter(p=>p.t==='f'),'p')+
+    grp('Essenciais',d.passivos.filter(p=>p.t==='e'),'p')+
+    grp('Variáveis',d.passivos.filter(p=>p.t==='v'),'p')+
+    (d.planoDaycoval?grp('Plano Daycoval',d.passivos.filter(p=>p.t==='b'),'b'):'')+
+    `<div class="msaldo"><span class="msaldo-l">Saldo em conta</span><span class="msaldo-v" style="color:${h.saldo>0.1?'var(--gn)':h.saldo<-0.1?'var(--rd)':'var(--gd)'}">${h.saldo===0||Math.abs(h.saldo)<0.1?'R$\u00a00':((h.saldo>0?'+':'−')+b2(Math.abs(h.saldo)))}</span></div>`+
+    (h.planoDaycoval>0?`<div class="mplan"><span class="mplan-l">Plano Daycoval</span><span class="mplan-v">${b2(h.planoDaycoval)}</span></div>`:'')+
+    (d.obs?`<p class="mobs">${d.obs}</p>`:'');
+  document.getElementById('mbg').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function mcls(){document.getElementById('mbg').classList.remove('open');document.body.style.overflow='';}
+function mchk(e){if(e.target===document.getElementById('mbg'))mcls();}
+
+</script>
+</body>
+</html>
