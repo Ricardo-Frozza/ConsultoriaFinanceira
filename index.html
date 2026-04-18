@@ -108,13 +108,17 @@ section{margin-bottom:54px}
 .var-table tr.vtr td{background:var(--s2);border-top:1px solid var(--bd2)}
 input.vi{
   background:var(--s2);border:2px solid var(--gdbr);border-radius:8px;
-  padding:8px 14px;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;
+  padding:8px 14px;font-family:'Space Mono',monospace;font-size:14px;font-weight:700;
   color:var(--gd2);text-align:right;outline:none;
   -webkit-appearance:none;-moz-appearance:textfield;appearance:textfield;
-  transition:border-color .15s,box-shadow .15s;
+  transition:border-color .15s,box-shadow .15s;min-width:0;
 }
 input.vi:focus{border-color:var(--gn);box-shadow:0 0 0 3px rgba(22,194,110,0.12);color:var(--gn)}
 input.vi::-webkit-outer-spin-button,input.vi::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.add-btn{background:var(--s2);border:1px solid var(--gdbr);color:var(--gd);font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:4px 12px;border-radius:6px;cursor:pointer;margin-left:10px;vertical-align:middle}
+.add-btn:hover{background:var(--s3)}
+.settle-btn{background:transparent;border:1px solid var(--rdbr);color:var(--rd);font-family:'Syne',sans-serif;font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase}
+.settle-btn:hover{background:var(--rdbg)}
 .dpos{color:var(--gn)!important}.dneg{color:var(--rd)!important}
 .just-area{width:100%;background:var(--rdbg);border:1px solid var(--rdbr);border-radius:6px;padding:7px 10px;font-family:'Syne',sans-serif;font-size:11px;color:var(--tx);resize:none;outline:none;margin-top:4px}
 .just-area:focus{border-color:var(--rd)}
@@ -319,59 +323,88 @@ footer p{font-size:11px;color:var(--t3)}
   </div>
 </section>
 
-<!-- GASTOS ESTRUTURADOS -->
+<!-- CONTRATOS -->
 <section>
-  <p class="sh">Estrutura de gastos</p>
-  <div class="g2">
-    <!-- Comprometidos -->
-    <div>
-      <p style="font-size:10px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--t2);margin-bottom:10px">Comprometidos — imutáveis</p>
-      <div class="gasto-block">
-        <div class="gb-head"><span class="gb-title">Valor fixo mensal</span><span class="gb-total" id="tot-fix">—</span></div>
-        <div id="fix-list"></div>
+  <p class="sh">Contratos de dívida <button class="add-btn" onclick="openAddContract()">+ Novo contrato</button></p>
+  <div class="tw">
+    <table style="width:100%;border-collapse:collapse;min-width:700px">
+      <thead><tr>
+        <th style="text-align:left;min-width:180px">Contrato</th>
+        <th style="text-align:left">Tipo</th>
+        <th>Parcela mensal</th>
+        <th>Restam</th>
+        <th>Saldo devedor</th>
+        <th>Encerramento prev.</th>
+        <th>Status</th>
+        <th style="width:80px"></th>
+      </tr></thead>
+      <tbody id="contracts-body"></tbody>
+    </table>
+  </div>
+  <!-- Add contract inline form -->
+  <div id="add-contract-form" style="display:none;margin-top:12px;background:var(--s1);border:1px solid var(--gdbr);border-radius:12px;padding:18px 20px">
+    <p style="font-size:11px;font-weight:700;color:var(--gd);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px">Novo contrato</p>
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:10px;align-items:end;flex-wrap:wrap">
+      <div><p style="font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px">Nome</p><input class="vi" type="text" id="nc-name" placeholder="Ex: Financiamento veículo" style="width:100%;text-align:left"></div>
+      <div><p style="font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px">Parcela mensal</p><input class="vi" type="number" id="nc-monthly" placeholder="0,00" style="width:100%"></div>
+      <div><p style="font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px">Parcelas restantes</p><input class="vi" type="number" id="nc-remaining" placeholder="0" style="width:100%"></div>
+      <div><p style="font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px">Saldo devedor</p><input class="vi" type="number" id="nc-balance" placeholder="0,00" style="width:100%"></div>
+      <div><p style="font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px">Tipo</p>
+        <select id="nc-type" style="background:var(--s2);border:2px solid var(--gdbr);border-radius:8px;padding:8px 12px;font-family:'Syne',sans-serif;font-size:12px;color:var(--tx);outline:none;width:100%">
+          <option value="empréstimo">Empréstimo</option>
+          <option value="financiamento">Financiamento</option>
+          <option value="cartão">Cartão / Amort.</option>
+        </select>
       </div>
     </div>
-    <!-- Essenciais -->
-    <div>
-      <p style="font-size:10px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--t2);margin-bottom:10px">Essenciais — baixíssima variação</p>
-      <div class="gasto-block">
-        <div class="gb-head"><span class="gb-title">Referência mensal</span><span class="gb-total" id="tot-ess">—</span></div>
-        <div id="ess-list"></div>
-      </div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="add-btn" onclick="saveContract()" style="background:var(--gnbg);border-color:var(--gnbr);color:var(--gn)">Salvar contrato</button>
+      <button class="add-btn" onclick="closeAddContract()" style="color:var(--t2)">Cancelar</button>
     </div>
   </div>
+</section>
 
-  <!-- Variáveis orçadas -->
-  <div style="margin-top:16px">
-    <p style="font-size:10px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--t2);margin-bottom:10px">Variáveis orçadas — acompanhamento Abr/26</p>
-    <div class="gasto-block" style="overflow-x:auto">
-      <table class="var-table">
+<!-- GASTOS -->
+<section>
+  <p class="sh">Estrutura de gastos — Abril 2026</p>
+  <div style="background:var(--s1);border:1px solid var(--bd);border-radius:12px;overflow:hidden">
+    <div style="background:var(--s2);padding:11px 16px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t2)">Referência vs. realizado · edite qualquer campo</span>
+      <div style="display:flex;gap:20px;flex-wrap:wrap">
+        <span style="font-size:11px;color:var(--t2)">Referência: <strong id="tot-ref" style="font-family:'Space Mono',monospace;color:var(--gd)">—</strong></span>
+        <span style="font-size:11px;color:var(--t2)">Realizado: <strong id="tot-real-lbl" style="font-family:'Space Mono',monospace">—</strong></span>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;min-width:520px">
         <thead><tr>
-          <th style="text-align:left;min-width:140px">Categoria</th>
-          <th>Orçado</th><th>Realizado</th><th>Diferença</th>
+          <th style="text-align:left;background:var(--s1);min-width:160px">Item</th>
+          <th style="text-align:left;background:var(--s1)">Tipo</th>
+          <th style="background:var(--s1)">Referência</th>
+          <th style="background:var(--s1)">Realizado</th>
+          <th style="background:var(--s1)">Diferença</th>
         </tr></thead>
-        <tbody id="var-body"></tbody>
+        <tbody id="gastos-body"></tbody>
+        <tfoot id="gastos-foot"></tfoot>
       </table>
     </div>
-    <p style="font-size:10px;color:var(--t3);margin-top:8px">Edite o "Realizado" para calcular a diferença. Vermelho = acima do orçado, exige justificativa.</p>
   </div>
+  <p style="font-size:10px;color:var(--t3);margin-top:8px">Edite qualquer campo — valores sensibilizam o Saldo Projetado instantaneamente.</p>
 </section>
 
 <!-- MÊS ATUAL -->
 <section>
-  <p class="sh">Mês atual — Abril 2026 <span class="bdg bo" style="vertical-align:middle;margin-left:8px">projetado</span></p>
+  <p class="sh">Mês atual — Abril 2026 <span class="bdg" style="background:var(--gnbg);color:var(--gn);border:1px solid var(--gnbr);vertical-align:middle;margin-left:8px">Aberto</span></p>
   <div style="background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:20px">
     <div class="curr-kpis" id="curr-kpis"></div>
-    <div style="overflow-x:auto;border:1px solid var(--bd);border-radius:8px">
-      <table class="var-table" id="curr-table">
-        <thead><tr>
-          <th style="text-align:left;min-width:150px">Item</th>
-          <th>Tipo</th><th>Previsto</th><th>Realizado</th><th>Diff</th>
-        </tr></thead>
-        <tbody id="curr-body"></tbody>
-      </table>
+    <div style="margin-top:14px;background:var(--blbg);border:1px solid var(--blbr);border-radius:10px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div>
+        <p style="font-size:9px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--bl);margin-bottom:4px">Plano Daycoval — aporte CDB</p>
+        <p style="font-size:11px;color:var(--t2)">Separado mensalmente para quitação em junho · sensibiliza o saldo</p>
+      </div>
+      <input class="vi" type="number" id="plan-input" value="1117.03" min="0" step="0.01" oninput="updPlan(this)" style="width:140px">
     </div>
-    <p style="font-size:10px;color:var(--t3);margin-top:10px">Saldo projetado = 0 — toda a sobra é direcionada ao Plano Daycoval (R$ 1.117,03). Edite o realizado para acompanhar.</p>
+    <p style="font-size:10px;color:var(--t3);margin-top:10px">Edite os gastos na tabela acima ou o Plano Daycoval aqui. Daycoval (R$ 462,67) continua sendo pago mensalmente até a quitação em junho.</p>
   </div>
 </section>
 
@@ -416,23 +449,27 @@ footer p{font-size:11px;color:var(--t3)}
 <!-- PROJEÇÃO -->
 <section>
   <p class="sh">Projeção · julho 2026 a outubro 2031</p>
-  <h2>Parcelas encerrando · sobra crescendo · patrimônio acumulando com CDI</h2>
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap">
+    <h2 style="margin:0;font-size:18px">Parcelas encerrando · sobra crescendo · patrimônio acumulando</h2>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;background:var(--s1);border:1px solid var(--gdbr);border-radius:10px;padding:12px 18px;flex-wrap:wrap">
+    <p style="font-size:10px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--gd)">Base de cálculo — patrimônio em Jul/26</p>
+    <input class="vi" type="number" id="inv-base-input" value="54933.76" min="0" step="0.01" oninput="updInvBase(this)" style="width:150px">
+    <p style="font-size:11px;color:var(--t2)">CDI 10,75% a.a. + sobra reinvestida mensalmente</p>
+  </div>
   <div class="tw">
-    <table style="min-width:700px;width:100%">
-      <thead><tr>
-        <th style="text-align:left;min-width:140px">Mês</th>
-        <th>INTERME</th><th>BCO SAF</th><th>CLICKBANK</th>
-        <th>Gastos base *</th><th>Total saída</th>
-        <th class="tho">Patrimônio †</th><th class="thg">Sobra</th>
-      </tr></thead>
+    <table style="width:100%;border-collapse:collapse" id="proj-table">
+      <thead id="proj-head"></thead>
       <tbody id="pb"></tbody>
     </table>
   </div>
   <p style="font-size:10px;color:var(--t3);margin-top:10px;line-height:1.8">
     * Gastos base = R$ 4.915,73 (IR R$2.018 + INSS R$448 + água+luz R$400 + cel+net+consul R$500 + mercado+lazer R$1.550).<br>
-    † Patrimônio: 54.933,76 em Jul/26 + CDI 0,854%/mês + sobra reinvestida mensalmente.
+    † Patrimônio: base editável × CDI 0,854%/mês + sobra reinvestida a cada mês.
   </p>
 </section>
+
+
 
 <footer>
   <p>Documento pessoal e confidencial · Acompanhamento desde nov/2025</p>
@@ -456,127 +493,278 @@ footer p{font-size:11px;color:var(--t3)}
 // ── CONSTANTS ──────────────────────────────────────────────
 const APOS   = 11242.28;
 const CDI_MM = 0.008545;
-const GASTOS_BASE = 4915.73;
-const IN_V=2669.45,IN_N=38, SAF_V=499.02,SAF_N=56, CL_V=317.38,CL_N=67, DAYBCO_V=462.67;
-const INV_MAR = 56953, INV_JUL = 54933.76;
+let INV_BASE = 54933.76;   // editável pelo usuário
+const INV_MAR = 56953;
 
 // ── HELPERS ────────────────────────────────────────────────
+function b2(v){return 'R$\u00a0'+Math.abs(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function brl(v,d=0){return 'R$\u00a0'+Math.abs(v).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d})}
-function b2(v){return brl(v,2)}
 function fmtMes(d){return d.toLocaleDateString('pt-BR',{month:'short',year:'2-digit'}).replace('.','').replace(/^\w/,c=>c.toUpperCase())}
+function addMonths(baseDate, n){ const d=new Date(baseDate); d.setMonth(d.getMonth()+n); return d; }
 
-// ── UNIFIED EXPENSE DATA — single source of truth ──────────
-// All non-parcela expenses for April 2026
-// ref = reference/budget | act = actual (editable) | orc = has budget target
-const EXPENSES = [
-  {n:'Imposto de Renda',     tipo:'obrigatório', ref:2017.56, act:2017.56},
-  {n:'INSS / Seg. Social',   tipo:'obrigatório', ref:448.17,  act:448.17 },
-  {n:'Celular',              tipo:'fixo',         ref:100,     act:100    },
-  {n:'Internet',             tipo:'fixo',         ref:100,     act:100    },
-  {n:'Consultoria',          tipo:'fixo',         ref:300,     act:300    },
-  {n:'Água',                 tipo:'essencial',    ref:150,     act:150    },
-  {n:'Luz',                  tipo:'essencial',    ref:250,     act:250    },
-  {n:'Supermercado',         tipo:'variável',     ref:900,     act:900    },
-  {n:'Lazer',                tipo:'variável',     ref:650,     act:650    },
-  {n:'Extras / Imprevistos', tipo:'livre',        ref:null,    act:1261   },
+// ── CONTRACTS ─────────────────────────────────────────────
+// remaining = parcelas restantes a partir de Jul/26 (mês 0 da projeção)
+// projStart = quantos meses depois de Jul/26 este contrato começa (0 = já ativo em Jul/26)
+let CONTRACTS = [
+  {id:'interme',   name:'34258 · INTERME',    monthly:2669.45, remaining:38, balance:101439.10, type:'empréstimo', active:true,  projStart:0},
+  {id:'bco_saf',  name:'29458247 · BCO SAF', monthly:499.02,  remaining:56, balance:26448.06,  type:'empréstimo', active:true,  projStart:0},
+  {id:'clickbank',name:'35007 · Clickbank',  monthly:317.38,  remaining:67, balance:20312.32,  type:'cartão',     active:true,  projStart:0},
+  {id:'daycoval', name:'34807 · Daycoval',   monthly:462.67,  remaining:0,  balance:0,         type:'cartão',     active:false, projStart:0, settled:'Jun/2026', note:'Quitado via Plano Daycoval'},
 ];
 
-let planoDaycoval = 1117.03;
-
-// ── CALC SALDO ─────────────────────────────────────────────
-function calcSaldo(){
-  const parcelas = IN_V + SAF_V + CL_V + DAYBCO_V;
-  const gastos   = EXPENSES.reduce((s,e)=>s+e.act, 0);
-  const total    = parcelas + gastos + planoDaycoval;
-  return { parcelas, gastos, total, saldo: APOS - total };
+function getParcelas(){
+  return CONTRACTS.filter(c=>c.active&&c.remaining>0).reduce((s,c)=>s+c.monthly,0);
 }
 
-// ── UPDATE KPIs ────────────────────────────────────────────
+// ── RENDER CONTRACTS TABLE ─────────────────────────────────
+function renderContracts(){
+  const tbody = document.getElementById('contracts-body');
+  if(!tbody) return;
+  const jul26 = new Date(2026,6,1);
+  let rows = '';
+  CONTRACTS.forEach((c,i)=>{
+    const endDate = c.active && c.remaining>0
+      ? fmtMes(addMonths(jul26, c.remaining-1))
+      : (c.settled || '—');
+    const sc = c.active && c.remaining>0 ? 'tr' : 'tg';
+    const statusPill = c.active && c.remaining>0
+      ? `<span class="bdg br">ativo</span>`
+      : `<span class="bdg" style="background:var(--s3);color:var(--t3)">encerrado</span>`;
+    const actionBtn = c.active && c.remaining>0
+      ? `<button class="settle-btn" onclick="settleContract(${i})">Quitar</button>`
+      : '';
+    const noteCell = c.note ? `<br><span style="font-size:9px;color:var(--t3)">${c.note}</span>` : '';
+    rows += `<tr>
+      <td style="font-family:'Syne',sans-serif;font-weight:600;font-size:12px;color:var(--tx)">${c.name}${noteCell}</td>
+      <td style="font-family:'Syne',sans-serif;font-size:10px;color:var(--t2)">${c.type}</td>
+      <td class="${sc}">${c.active&&c.remaining>0?b2(c.monthly):'<span class="tenc">—</span>'}</td>
+      <td style="color:var(--t2)">${c.active&&c.remaining>0?c.remaining+' parcelas':'<span class="tenc">encerrado</span>'}</td>
+      <td class="${c.active&&c.remaining>0?'tr':'tg'}">${c.balance>0?b2(c.balance):'<span class="tenc">—</span>'}</td>
+      <td style="color:var(--t2);font-size:11px">${endDate}</td>
+      <td>${statusPill}</td>
+      <td>${actionBtn}</td>
+    </tr>`;
+  });
+  tbody.innerHTML = rows;
+}
+
+function settleContract(i){
+  if(!confirm(`Confirmar quitação de "${CONTRACTS[i].name}"?`)) return;
+  CONTRACTS[i].active  = false;
+  CONTRACTS[i].remaining = 0;
+  CONTRACTS[i].balance   = 0;
+  CONTRACTS[i].settled   = new Date().toLocaleDateString('pt-BR',{month:'short',year:'numeric'});
+  renderContracts();
+  renderProj();
+  updKpis();
+}
+
+function openAddContract(){
+  document.getElementById('add-contract-form').style.display='block';
+}
+function closeAddContract(){
+  document.getElementById('add-contract-form').style.display='none';
+  ['nc-name','nc-monthly','nc-remaining','nc-balance'].forEach(id=>{document.getElementById(id).value='';});
+}
+function saveContract(){
+  const name     = document.getElementById('nc-name').value.trim();
+  const monthly  = parseFloat(document.getElementById('nc-monthly').value)||0;
+  const remaining= parseInt(document.getElementById('nc-remaining').value)||0;
+  const balance  = parseFloat(document.getElementById('nc-balance').value)||0;
+  const type     = document.getElementById('nc-type').value;
+  if(!name||!monthly) return alert('Preencha ao menos o nome e o valor mensal.');
+  CONTRACTS.push({id:'c_'+Date.now(),name,monthly,remaining,balance,type,active:true,projStart:0});
+  closeAddContract();
+  renderContracts();
+  renderProj();
+  updKpis();
+}
+
+// ── EXPENSES (gastos não-parcelados) ───────────────────────
+const EXPENSES = [
+  {n:'Imposto de Renda',     tipo:'obrigatório', ref:2017.56, act:2017.56},
+  {n:'INSS / Seg. Social',   tipo:'obrigatório', ref:448.17,  act:448.17},
+  {n:'Celular',              tipo:'fixo',         ref:100,     act:100},
+  {n:'Internet',             tipo:'fixo',         ref:100,     act:100},
+  {n:'Consultoria',          tipo:'fixo',         ref:300,     act:300},
+  {n:'Água',                 tipo:'essencial',    ref:150,     act:150},
+  {n:'Luz',                  tipo:'essencial',    ref:250,     act:250},
+  {n:'Supermercado',         tipo:'variável',     ref:900,     act:900},
+  {n:'Lazer',                tipo:'variável',     ref:650,     act:650},
+  {n:'Extras / Imprevistos', tipo:'livre',        ref:null,    act:1261},
+];
+let planoDaycoval = 1117.03;
+
+const TIPO_COLOR={'obrigatório':'var(--rd)','fixo':'var(--t2)','essencial':'var(--bl)','variável':'var(--gd)','livre':'var(--pu)'};
+
+// ── CALCULAR SALDO ─────────────────────────────────────────
+function calcSaldo(){
+  const par = CONTRACTS.filter(c=>c.active).reduce((s,c)=>s+c.monthly,0);
+  const gas = EXPENSES.reduce((s,e)=>s+e.act,0);
+  const tot = par+gas+planoDaycoval;
+  return {par, gas, tot, saldo: APOS-tot};
+}
+
+// ── KPIs ───────────────────────────────────────────────────
 function updKpis(){
-  const {parcelas, gastos, saldo} = calcSaldo();
-  const sc = saldo > 0.5 ? 'tgr' : saldo < -0.5 ? 'tr' : 'tgd';
-  document.getElementById('curr-kpis').innerHTML = `
+  const {par,gas,saldo}=calcSaldo();
+  const sc=saldo>0.5?'tgr':saldo<-0.5?'tr':'tgd';
+  document.getElementById('curr-kpis').innerHTML=`
     <div class="kpi"><p class="kpi-l">Aposentadoria</p><p class="kpi-v tgd">${b2(APOS)}</p></div>
-    <div class="kpi"><p class="kpi-l">Parcelas</p><p class="kpi-v tr">${b2(parcelas)}</p></div>
-    <div class="kpi"><p class="kpi-l">Gastos + Plano</p><p class="kpi-v" style="color:var(--t2)">${b2(gastos + planoDaycoval)}</p></div>
+    <div class="kpi"><p class="kpi-l">Parcelas</p><p class="kpi-v tr">${b2(par)}</p></div>
+    <div class="kpi"><p class="kpi-l">Gastos + Plano</p><p class="kpi-v" style="color:var(--t2)">${b2(gas+planoDaycoval)}</p></div>
     <div class="kpi"><p class="kpi-l">Saldo projetado</p><p class="kpi-v ${sc}">${saldo>=0?'+':''}${b2(saldo)}</p></div>`;
 }
 
-// ── RENDER GASTOS TABLE ────────────────────────────────────
-const TIPO_COLOR = {
-  'obrigatório':'var(--rd)',
-  'fixo':'var(--t2)',
-  'essencial':'var(--bl)',
-  'variável':'var(--gd)',
-  'livre':'var(--pu)',
-};
-const TIPO_ORDER = ['obrigatório','fixo','essencial','variável','livre'];
-
+// ── GASTOS TABLE — fix: NÃO reconstrói inputs no oninput ───
 function renderGastos(){
-  let rows = '', totRef = 0, totAct = 0;
-  let lastTipo = null;
-
+  let rows='', totRef=0, totAct=0, lastTipo=null;
   EXPENSES.forEach((e,i)=>{
-    // Group separator row
-    if(e.tipo !== lastTipo){
-      lastTipo = e.tipo;
-      rows += `<tr style="background:var(--s3)"><td colspan="5" style="padding:5px 16px;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:${TIPO_COLOR[e.tipo]||'var(--t2)'};font-family:'Syne',sans-serif">${e.tipo.toUpperCase()}</td></tr>`;
+    if(e.tipo!==lastTipo){
+      lastTipo=e.tipo;
+      rows+=`<tr style="background:var(--s3)"><td colspan="5" style="padding:5px 16px;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:${TIPO_COLOR[e.tipo]};font-family:'Syne',sans-serif">${e.tipo}</td></tr>`;
     }
-    const hasRef = e.ref !== null;
-    if(hasRef) totRef += e.ref;
-    totAct += e.act;
-    const diff  = hasRef ? (e.ref - e.act) : null;
-    const over  = hasRef && diff < 0;
-    const refCell  = hasRef ? b2(e.ref) : '<span style="color:var(--t3)">—</span>';
-    const diffCell = hasRef
-      ? `<span class="${over?'dneg':'dpos'}">${over?'−':'+ '}${b2(Math.abs(diff))}</span>`
-      : '<span style="color:var(--t3)">—</span>';
-
-    rows += `<tr>
-      <td style="color:var(--tx);padding-left:20px">${e.n}</td>
-      <td style="font-family:'Syne',sans-serif;font-size:10px;color:${TIPO_COLOR[e.tipo]||'var(--t2)'};">${e.tipo}</td>
+    const hasRef=e.ref!==null;
+    if(hasRef) totRef+=e.ref;
+    totAct+=e.act;
+    const diff=hasRef?(e.ref-e.act):null;
+    const over=hasRef&&diff<0;
+    const refCell=hasRef?b2(e.ref):'<span style="color:var(--t3)">—</span>';
+    const diffCell=hasRef?`<span class="${over?'dneg':'dpos'}">${over?'−':'+ '}${b2(Math.abs(diff))}</span>`:'<span style="color:var(--t3)">—</span>';
+    rows+=`<tr data-row="${i}">
+      <td style="padding-left:20px;font-family:'Syne',sans-serif;font-size:12px;color:var(--tx)">${e.n}</td>
+      <td style="font-family:'Syne',sans-serif;font-size:10px;color:${TIPO_COLOR[e.tipo]}">${e.tipo}</td>
       <td style="color:var(--t2)">${refCell}</td>
-      <td><input class="vi" type="number" value="${e.act}" min="0" step="0.01"
-          data-idx="${i}" oninput="updExpense(this)" style="width:130px"></td>
-      <td>${diffCell}</td>
+      <td><input class="vi" type="number" value="${e.act}" min="0" step="0.01" data-idx="${i}" onchange="updExpense(this)" style="width:130px"></td>
+      <td class="diff-cell">${diffCell}</td>
     </tr>`;
     if(over){
-      rows += `<tr style="background:var(--rdbg)"><td colspan="5" style="padding:4px 20px 10px">
+      rows+=`<tr class="just-row" data-for="${i}" style="background:var(--rdbg)"><td colspan="5" style="padding:4px 20px 10px">
         <p style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--rd);margin-bottom:5px">Justificativa do excesso</p>
         <textarea class="just-area" rows="2" placeholder="Descreva o motivo..."></textarea>
       </td></tr>`;
     }
   });
+  document.getElementById('gastos-body').innerHTML=rows;
+  updGastosTotal(totRef, totAct);
+}
 
-  // Subtotal row
-  const dTot = totRef - totAct, overTot = dTot < 0;
-  rows += `<tr style="background:var(--s2);border-top:2px solid var(--bd2)">
-    <td colspan="2" style="font-weight:700;color:var(--tx);padding-left:16px">Total gastos</td>
-    <td style="font-weight:700;color:var(--gd)">${b2(totRef)}</td>
-    <td class="${overTot?'dneg':'dpos'}" style="font-weight:700">${b2(totAct)}</td>
-    <td class="${overTot?'dneg':'dpos'}" style="font-weight:700">${overTot?'−':'+ '}${b2(Math.abs(dTot))}</td>
+function updGastosTotal(totRef, totAct){
+  if(totRef===undefined){
+    totRef=0; totAct=0;
+    EXPENSES.forEach(e=>{ if(e.ref!==null) totRef+=e.ref; totAct+=e.act; });
+  }
+  const dTot=totRef-totAct, overTot=dTot<0;
+  document.getElementById('gastos-foot').innerHTML=`<tr style="background:var(--s2);border-top:2px solid var(--bd2)">
+    <td colspan="2" style="font-weight:700;color:var(--tx);padding-left:16px;font-family:'Syne',sans-serif">Total gastos</td>
+    <td style="font-weight:700;color:var(--gd);text-align:right;padding:9px 13px">${b2(totRef)}</td>
+    <td class="${overTot?'dneg':'dpos'}" style="font-weight:700;text-align:right;padding:9px 13px">${b2(totAct)}</td>
+    <td class="${overTot?'dneg':'dpos'}" style="font-weight:700;text-align:right;padding:9px 13px">${overTot?'−':'+ '}${b2(Math.abs(dTot))}</td>
   </tr>`;
-
-  document.getElementById('gastos-body').innerHTML = rows;
-  document.getElementById('tot-ref').textContent  = b2(totRef);
-  const lbl = document.getElementById('tot-real-lbl');
-  lbl.textContent = b2(totAct);
-  lbl.className = overTot ? 'dneg' : 'dpos';
+  document.getElementById('tot-ref').textContent=b2(totRef);
+  const lbl=document.getElementById('tot-real-lbl');
+  lbl.textContent=b2(totAct);
+  lbl.className=overTot?'dneg':'dpos';
 }
 
+// KEY FIX: onchange (not oninput) — só atualiza quando sai do campo
+// Assim o usuário pode digitar o número completo sem o campo ser destruído
 function updExpense(el){
-  const i = parseInt(el.dataset.idx);
-  EXPENSES[i].act = parseFloat(el.value) || 0;
-  renderGastos();
+  const i=parseInt(el.dataset.idx);
+  EXPENSES[i].act=parseFloat(el.value)||0;
+  const e=EXPENSES[i];
+  // Update apenas a célula diff desta linha (sem reconstruir os inputs)
+  const row=document.querySelector(`tr[data-row="${i}"]`);
+  if(row){
+    const diffCell=row.querySelector('.diff-cell');
+    if(e.ref!==null){
+      const diff=e.ref-e.act, over=diff<0;
+      diffCell.innerHTML=`<span class="${over?'dneg':'dpos'}">${over?'−':'+ '}${b2(Math.abs(diff))}</span>`;
+    }
+    // Justification row
+    const nextRow=row.nextElementSibling;
+    if(nextRow&&nextRow.classList.contains('just-row')){
+      if(e.ref!==null&&e.act>e.ref) nextRow.style.display='';
+      else nextRow.style.display='none';
+    }
+  }
+  updGastosTotal();
   updKpis();
 }
 
-function updPlan(el){
-  planoDaycoval = parseFloat(el.value) || 0;
-  updKpis();
+function updPlan(el){ planoDaycoval=parseFloat(el.value)||0; updKpis(); }
+
+// ── PROJECTION ─────────────────────────────────────────────
+function updInvBase(el){
+  INV_BASE=parseFloat(el.value)||0;
+  renderProj();
 }
 
+const GASTOS_BASE_PROJ = 4915.73; // gastos base para projeção futura
+
+function renderProj(){
+  const activeContracts = CONTRACTS.filter(c=>c.active&&c.remaining>0);
+  const MONTHS=65;
+  const jul26=new Date(2026,6,1);
+
+  // Build header
+  let headCols='<th style="text-align:left;min-width:130px">Mês</th>';
+  activeContracts.forEach(c=>{
+    headCols+=`<th style="color:var(--rd)">${c.name.split('·')[1]?.trim()||c.name}</th>`;
+  });
+  headCols+='<th>Gastos base *</th><th>Total saída</th><th class="tho">Patrimônio †</th><th class="thg">Sobra</th>';
+  document.getElementById('proj-head').innerHTML=`<tr>${headCols}</tr>`;
+
+  let rows='', inv=INV_BASE, lpy='';
+  for(let i=0;i<MONTHS;i++){
+    const d=addMonths(jul26,i);
+    const yr=d.getFullYear().toString();
+    if(yr!==lpy){lpy=yr;const cols=4+activeContracts.length;rows+=`<tr class="yr"><td colspan="${cols}">── ${yr}</td></tr>`;}
+
+    let parTotal=0;
+    let parCells='';
+    const milestones=[];
+    activeContracts.forEach(c=>{
+      const idx=i-c.projStart;
+      if(idx>=0&&idx<c.remaining){
+        parTotal+=c.monthly;
+        parCells+=`<td class="tr">${b2(c.monthly)}</td>`;
+      } else if(idx===c.remaining){
+        milestones.push(c.name.split('·')[1]?.trim()||c.name);
+        parCells+=`<td class="tg"><span class="tenc">encerrado</span></td>`;
+      } else {
+        parCells+=`<td class="tg">—</td>`;
+      }
+    });
+
+    const tot=GASTOS_BASE_PROJ+parTotal;
+    const sob=APOS-tot;
+    inv=inv*(1+CDI_MM)+(sob>0?sob:0);
+
+    let bdg='';
+    milestones.forEach(m=>{ bdg+=`<span class="bdg bg">${m} encerrado</span>`; });
+    const sc=sob>=6000?'st':sob>=5000?'sh2':sob>=3500?'sm':'sl';
+    const rc=milestones.length>0?'msr':'';
+
+    rows+=`<tr${rc?` class="${rc}"`:''}>
+      <td style="font-family:'Syne',sans-serif;font-weight:600;font-size:11px;color:var(--t2)">${fmtMes(d)}${bdg}</td>
+      ${parCells}
+      <td style="color:var(--t2)">${b2(GASTOS_BASE_PROJ)}</td>
+      <td style="color:var(--t2)">${b2(tot)}</td>
+      <td class="tgd">${brl(Math.round(inv))}</td>
+      <td class="${sc}">${b2(sob)}</td>
+    </tr>`;
+  }
+  document.getElementById('pb').innerHTML=rows;
+}
+
+// CSS helpers for projection
+document.head.insertAdjacentHTML('beforeend','<style>.sl{color:var(--gd)!important;font-weight:700!important}.sm{color:var(--tx)!important;font-weight:700!important}.sh2{color:var(--gn)!important;font-weight:700!important}.st{color:var(--gn)!important;font-weight:700!important;font-size:13px!important}</style>');
+
+// ── INIT ───────────────────────────────────────────────────
+renderContracts();
 renderGastos();
+renderProj();
 updKpis();
 
 // ── HISTORY DATA ───────────────────────────────────────────
